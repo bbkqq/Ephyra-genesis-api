@@ -1,15 +1,17 @@
-FROM golang:1.23-alpine AS builder
+FROM golang:1.24-alpine AS builder
 
 LABEL stage=gobuilder
 
 ENV CGO_ENABLED=0
+ENV GO111MODULE=on
+
 #ENV GOPROXY https://goproxy.cn,direct
 # 编译项目
 
 WORKDIR /build
 ADD go.mod .
 ADD go.sum .
-RUN go mod download
+RUN go mod tidy
 COPY . .
 RUN sh ./build.sh
 RUN mv ./output /app
@@ -27,6 +29,3 @@ ENV GO_ENV=prod
 WORKDIR /app
 # 运行服务
 CMD ["bash", "bootstrap.sh"]
-
-# docker build -t deagent-golang-service:1.0 .
-# docker run  -it --name deagent-golang-service-test -v /var/log/:/deagent-golang-service/log/  -e GO_ENV=dev  -p 18080:8080 deagent-golang-service:1.0 /bin/bash
