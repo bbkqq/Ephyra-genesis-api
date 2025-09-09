@@ -1,0 +1,54 @@
+syntax = "proto3";
+
+package task;
+
+import "api.proto";
+import "user.proto";
+
+option go_package = "basic/task";
+
+message GetDailyQuestionsRequest{}
+
+message Question {
+  int64 id = 1;
+  string title = 2;
+  string content = 3;
+  int64 type = 4;
+}
+
+message GetDailyQuestionsResponse{
+  repeated Question questions = 1;
+}
+
+message CanSubmitAnswerRequest {}
+message CanSubmitAnswerResponse {
+  bool status = 1;
+  int64 estimated_points = 2;
+  int64 estimated_extra_points = 3;
+}
+
+message GetAnswerTxStatusRequest{
+  string tx_hash = 1;
+}
+message GetAnswerTxStatusResponse{
+  int32 status = 1;                 // 合约执行状态 0 未处理，1 成功 -1 失败
+  repeated user.Badge badges = 2;   // 这次合约交互获得徽章的列表
+  int64 points = 3;                 // 这次合约交互的积分奖励
+  int64 extra_points = 4;           // 这次合约交互额外的积分奖励，连击奖励
+}
+
+service TaskHandler {
+
+  rpc TaskGetDailyQuestions(GetDailyQuestionsRequest) returns(GetDailyQuestionsResponse) {
+    option (api.get) = "/api/task/daily-questions/";
+  }
+
+  rpc TaskCanSubmitAnswer(CanSubmitAnswerRequest) returns(CanSubmitAnswerResponse) {
+    option (api.post) = "/api/task/can-submit-answer/";
+  }
+
+  rpc TaskGetAnswerTxStatus(GetAnswerTxStatusRequest) returns(GetAnswerTxStatusResponse) {
+    option (api.post) = "/api/task/get-answer-tx-status/";
+  }
+
+}

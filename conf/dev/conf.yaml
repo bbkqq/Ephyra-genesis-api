@@ -1,0 +1,25 @@
+hertz:
+  service: "Ephyra-genesis-api"
+  address: ":8080"
+  enable_pprof: true
+  enable_gzip: true
+  enable_access_log: true
+  log_level: info
+  log_file_name: "log/hertz.log"
+  log_max_size: 10
+  log_max_age: 3
+  log_max_backups: 50
+
+mysql:
+  dsn: "ephyra_test:LejebJcheiHyhc083@tcp(ephaidb.chc0q4gii8ts.ap-northeast-1.rds.amazonaws.com:3306)/ephyra_test?charset=utf8mb4&parseTime=True&loc=Local"
+
+redis:
+  address: "57.181.136.39:6789"
+  username: "default"
+  password: "0938Uekjdyhbde"
+  db: 0
+
+contract:
+  - name: "Answer"
+    address: "0x68b63f6A274594Cf2138A04dc2c98F528bC1bd1F"
+    rpc_url: "https://rpc.ankr.com/bsc_testnet_chapel/e513b41b6053de458b631c1471d0ef8069be73d0ada4aa39ca41b7055865b61a"

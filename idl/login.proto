@@ -1,0 +1,30 @@
+syntax = "proto3";
+
+package login;
+
+import "api.proto";
+
+option go_package = "basic/login";
+
+message UserLoginRequest {
+  string address = 1;
+  string sign_message = 2;
+  string signature = 3;
+  string chain_name = 4;
+}
+
+message UserLoginResponse {
+  int64  user_id    = 1;
+  string auth_token = 2;
+  string address    = 3;
+  bool   is_new = 4;
+}
+
+
+service LoginHandler {
+
+  rpc LoginUserLogin(UserLoginRequest) returns(UserLoginResponse) {
+    option (api.post) = "/api/login/";
+  }
+
+}

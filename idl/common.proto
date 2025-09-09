@@ -1,0 +1,21 @@
+syntax = "proto3";
+
+package common;
+
+import "api.proto";
+
+option go_package = "basic/common";
+
+message ContributionsRequest{}
+
+message ContributionsResponse{
+  int64 contribution_num = 1;
+}
+
+service CommonHandler {
+
+  rpc CommonContributions(ContributionsRequest) returns(ContributionsResponse) {
+    option (api.get) = "/api/common/contributions/";                            // impl: 获取 user_daily_task_log 表的总数
+  }
+
+}

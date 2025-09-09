@@ -1,0 +1,55 @@
+---
+description: 
+globs: *
+alwaysApply: false
+---
+ # Ephyra Project Overview
+
+## Project Architecture
+
+Ephyra-genesis-api 是 golang的代码仓库，包含了web3智能合约封装，数据库，常见的工具库，以及不同的服务：
+1. conf: 是项目的配置文件，格式是yml
+2. constracts: 是关于智能合约的封装
+3. pkg: 封装了使用的工具类
+5. storage: 是通过cloudwego 的mysql生成工具生成的数据库的orm model, 生成的数据库model存放在 storage/mysql/model 目录下
+6. build.sh 是项目构建的脚本
+7. MakeFile: make db 这个是在修改了 storage/sql/ 目录下面的sql文件直接，执行make db会调用数据库的代码生成工具，生成数据库的model; make api: 主要是修改idl的文件之后，通过MakeFile 可以生成 hertz_gen 的代码
+
+8. main.go 里面是这个程序的入口，里面有hertz的httpserver 和 corn job的启动
+9. idl: 是 protobuf 文件，按照protobuf的规范编写的http 接口的请求，响应，和接口path函数
+10. MakeFile:
+11. hertz_gen: 是hertz工具生成的代码，这里面的代码不允许改动
+12. biz里面是已经实现好的业务逻辑，在通过MakeFile 的 hertz_gen 之后，按照idl的定义生成好了接口的请求参数，和router的信息，然后会在 biz/service 目录下生成方法同名的go文件，里面就是这个方法具体要实现的部分。biz/dal 目录是跟数据库有关的操作，封装了CRUD的方法
+13. jobs: 是claimx 的cronjob的地方，每一个都是定时任务
+
+## Technology Stack
+- **Go**: v1.24+ (Primary language)
+- **orm**: 使用 gorm 完成数据库的连接等操作
+- **Databases**: mysql (production), mysql (development)
+- **Web Frameworks**: Gin for HTTP routing
+- **Containerization**: Docker for deployment
+
+## Code Organization Principles
+1. **Modular Design**: Each module has clear responsibilities and interfaces
+2. **Configuration Management**: Centralized configuration through environment variables
+3. **Code Generation**: 使用项目中的MakeFile
+4. **Clean Architecture**: Separation of concerns between API, business logic, and storage
+5. **Error Handling**: Comprehensive error tracking and reporting via Sentry
+
+
+## Development Conventions
+1. **Code Style**: Follow standard Go conventions and idioms
+2. **Error Handling**: Return errors for caller to handle; use proper error types
+3. **Configuration**: Use environment variables via centralized config package
+4. **Testing**: Write unit tests for core functionality
+5. **Documentation**: Document all public APIs and complex logic
+6. **Database**: Use migrations for schema changes; follow ent.io patterns
+
+## Special Note for AI Assistants
+When working with this codebase:
+1. Consider cross-module dependencies when making changes
+2. Follow existing patterns for error handling and configuration
+3. Use code generation appropriately (entgo, gqlgen)
+4. Understand the deployment workflow across nami-api and job-executor
+5. Reference existing implementations when adding new features
+6. 在生成代码之前，不要直接生成代码，先跟我沟通交流请求技术方案，我同意之后再生成代码
