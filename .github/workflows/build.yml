@@ -33,7 +33,7 @@ jobs:
           context: .
           file: ./Dockerfile
           push: true
-          tags: ephyra/Ephyra-genesis-api:${{ env.tag }}
+          tags: ephyra/ephyra-genesis-api:${{ env.tag }}
 
       - name: Print image url
-        run: echo "Image pushed to docker.io/ephyra/Ephyra-genesis-api:${{ env.tag }}"
+        run: echo "Image pushed to docker.io/ephyra/ephyra-genesis-api:${{ env.tag }}"
