@@ -9,6 +9,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"github.com/spf13/cast"
 	"strings"
 	"time"
 
@@ -746,9 +747,7 @@ func GetDailyRankingFromRedis(ctx context.Context, userID int64, limit int) ([]*
 	if len(userIDs) > 0 {
 		var userIDsInt64 []int64
 		for _, idStr := range userIDs {
-			if id, err := fmt.Sscanf(idStr, "%d"); err == nil {
-				userIDsInt64 = append(userIDsInt64, int64(id))
-			}
+			userIDsInt64 = append(userIDsInt64, cast.ToInt64(idStr))
 		}
 
 		if len(userIDsInt64) > 0 {
