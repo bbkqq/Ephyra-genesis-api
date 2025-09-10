@@ -24,8 +24,8 @@ func (h *TaskGetDailyQuestionsService) Run(req *task.GetDailyQuestionsRequest) (
 	// hlog.CtxInfof(h.Context, "resp = %+v", resp)
 	//}()
 
-	// 获取每日问题，这里获取所有问题，实际项目中可能需要根据日期或其他条件过滤
-	questions, err := dal.GetDailyQuestions(h.Context, 0) // 0表示不限制数量
+	// 获取每日问题，随机获取10个问题
+	questions, err := dal.GetDailyQuestions(h.Context, 10)
 	if err != nil {
 		return nil, err
 	}

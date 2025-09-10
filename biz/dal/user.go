@@ -198,13 +198,14 @@ func GetBadgesByIDs(ctx context.Context, badgeIDs []int64) ([]*model.Badge, erro
 
 func GetDailyQuestions(ctx context.Context, limit int) ([]*model.Question, error) {
 	var questions []*model.Question
-	query := mysql.DB.Model(&model.Question{})
 
-	if limit > 0 {
-		query = query.Limit(limit)
+	// 默认获取10个问题
+	if limit <= 0 {
+		limit = 10
 	}
 
-	err := query.Find(&questions).Error
+	// 使用ORDER BY RAND()随机获取问题
+	err := mysql.DB.Model(&model.Question{}).Order("RAND()").Limit(limit).Find(&questions).Error
 	if err != nil {
 		hlog.CtxErrorf(ctx, "GetDailyQuestions error: %v", err)
 		return nil, bizerror.DBError
