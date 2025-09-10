@@ -22,10 +22,7 @@ import (
 	"github.com/hertz-contrib/cors"
 	"github.com/hertz-contrib/gzip"
 	"github.com/hertz-contrib/logger/accesslog"
-	hertzlogrus "github.com/hertz-contrib/logger/logrus"
 	"github.com/hertz-contrib/pprof"
-	"go.uber.org/zap/zapcore"
-	"gopkg.in/natefinch/lumberjack.v2"
 )
 
 func init() {
@@ -63,28 +60,29 @@ func main() {
 	if os.Getenv("RUN_CRONJOB") == "1" {
 		runCronJobs(ctx)
 	}
-	
+
 	h.Spin()
 }
 
 func registerMiddleware(h *server.Hertz) {
 	// log
-	logger := hertzlogrus.NewLogger()
-	hlog.SetLogger(logger)
+	//logger := hertzlogrus.NewLogger()
+	//hlog.SetLogger(logger)
 	hlog.SetLevel(conf.LogLevel())
-	asyncWriter := &zapcore.BufferedWriteSyncer{
-		WS: zapcore.AddSync(&lumberjack.Logger{
-			Filename:   conf.GetConf().Hertz.LogFileName,
-			MaxSize:    conf.GetConf().Hertz.LogMaxSize,
-			MaxBackups: conf.GetConf().Hertz.LogMaxBackups,
-			MaxAge:     conf.GetConf().Hertz.LogMaxAge,
-		}),
-		FlushInterval: time.Minute,
-	}
-	hlog.SetOutput(asyncWriter)
-	h.OnShutdown = append(h.OnShutdown, func(ctx context.Context) {
-		asyncWriter.Sync()
-	})
+	//asyncWriter := &zapcore.BufferedWriteSyncer{
+	//	//WS: zapcore.AddSync(&lumberjack.Logger{
+	//	//	Filename:   conf.GetConf().Hertz.LogFileName,
+	//	//	MaxSize:    conf.GetConf().Hertz.LogMaxSize,
+	//	//	MaxBackups: conf.GetConf().Hertz.LogMaxBackups,
+	//	//	MaxAge:     conf.GetConf().Hertz.LogMaxAge,
+	//	//}),
+	//	WS:            zapcore.AddSync(os.Stdin),
+	//	FlushInterval: time.Minute,
+	//}
+	//hlog.SetOutput(asyncWriter)
+	//h.OnShutdown = append(h.OnShutdown, func(ctx context.Context) {
+	//	asyncWriter.Sync()
+	//})
 
 	// pprof
 	if conf.GetConf().Hertz.EnablePprof {

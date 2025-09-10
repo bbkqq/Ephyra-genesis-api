@@ -2,6 +2,17 @@
 	{
 		"inputs": [
 			{
+				"internalType": "uint256",
+				"name": "_startTime",
+				"type": "uint256"
+			}
+		],
+		"stateMutability": "nonpayable",
+		"type": "constructor"
+	},
+	{
+		"inputs": [
+			{
 				"internalType": "address",
 				"name": "user",
 				"type": "address"
@@ -91,6 +102,24 @@
 		],
 		"name": "DailyLimitReached",
 		"type": "event"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "string",
+				"name": "answer",
+				"type": "string"
+			},
+			{
+				"internalType": "uint256",
+				"name": "id",
+				"type": "uint256"
+			}
+		],
+		"name": "submit_answer",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
 	},
 	{
 		"inputs": [
@@ -259,7 +288,7 @@
 	},
 	{
 		"inputs": [],
-		"name": "getCurrentDay",
+		"name": "getCurrentDayOffset",
 		"outputs": [
 			{
 				"internalType": "uint256",
@@ -511,21 +540,16 @@
 		"type": "function"
 	},
 	{
-		"inputs": [
-			{
-				"internalType": "string",
-				"name": "answer",
-				"type": "string"
-			},
+		"inputs": [],
+		"name": "startTime",
+		"outputs": [
 			{
 				"internalType": "uint256",
-				"name": "id",
+				"name": "",
 				"type": "uint256"
 			}
 		],
-		"name": "submit_answer",
-		"outputs": [],
-		"stateMutability": "nonpayable",
+		"stateMutability": "view",
 		"type": "function"
 	},
 	{

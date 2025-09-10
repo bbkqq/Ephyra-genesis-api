@@ -176,7 +176,7 @@ func (c *AnswerEventListenerJob) processEvent(ctx context.Context, opts *bind.Fi
 }
 
 func (c *AnswerEventListenerJob) Interval() time.Duration {
-	return 1 * time.Second
+	return 10 * time.Second
 }
 
 func (c *AnswerEventListenerJob) DisableSerializable() bool {
