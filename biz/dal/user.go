@@ -895,8 +895,7 @@ func GetLatestUsersWithSBTTokenID(ctx context.Context, limit int) ([]*model.User
 	err := mysql.DB.Model(&model.User{}).
 		Where("sbt_token_id > 0").
 		Order("create_at DESC").
-		Limit(limit).
-		Find(&users).Error
+		Limit(limit).Find(&users).Error
 	if err != nil {
 		hlog.CtxErrorf(ctx, "GetLatestUsersWithSBT error: %v", err)
 		return nil, bizerror.DBError
