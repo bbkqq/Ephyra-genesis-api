@@ -25,6 +25,10 @@ func Register(r *server.Hertz) {
 				_contributions := _common.Group("/contributions", _contributionsMw()...)
 				_contributions.GET("/", append(_commoncontributionsMw(), common.CommonContributions)...)
 			}
+			{
+				_nft_minted_info := _common.Group("/nft-minted-info", _nft_minted_infoMw()...)
+				_nft_minted_info.GET("/", append(_commonnftmintedinfoMw(), common.CommonNFTMintedInfo)...)
+			}
 		}
 	}
 }

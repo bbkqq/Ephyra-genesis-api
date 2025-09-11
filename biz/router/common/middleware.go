@@ -30,3 +30,13 @@ func _commoncontributionsMw() []app.HandlerFunc {
 	// your code...
 	return nil
 }
+
+func _nft_minted_infoMw() []app.HandlerFunc {
+	// your code...
+	return nil
+}
+
+func _commonnftmintedinfoMw() []app.HandlerFunc {
+	// your code...
+	return nil
+}

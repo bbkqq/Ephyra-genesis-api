@@ -9,9 +9,10 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"github.com/spf13/cast"
 	"strings"
 	"time"
+
+	"github.com/spf13/cast"
 
 	"github.com/cloudwego/hertz/pkg/common/hlog"
 	"gorm.io/gorm"
@@ -883,4 +884,22 @@ func GetWeeklyRankingFromRedis(ctx context.Context, userID int64, limit int) ([]
 	}
 
 	return users, userRanking, nil
+}
+
+// 获取最新的10条user记录
+func GetLatestUsersWithSBTTokenID(ctx context.Context, limit int) ([]*model.User, error) {
+	if limit <= 0 {
+		limit = 10
+	}
+	var users []*model.User
+	err := mysql.DB.Model(&model.User{}).
+		Where("sbt_token_id > 0").
+		Order("create_at DESC").
+		Limit(limit).
+		Find(&users).Error
+	if err != nil {
+		hlog.CtxErrorf(ctx, "GetLatestUsersWithSBT error: %v", err)
+		return nil, bizerror.DBError
+	}
+	return users, nil
 }
