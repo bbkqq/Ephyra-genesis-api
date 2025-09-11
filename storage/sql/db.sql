@@ -6,6 +6,7 @@ CREATE TABLE `user`
     `avatar_url`                VARCHAR(255) NOT NULL DEFAULT '' COMMENT '头像链接',
     `points`                    BIGINT       NOT NULL DEFAULT 0 COMMENT '积分',
     `badges`                    JSON         NOT NULL DEFAULT '[]' COMMENT '用户徽章, jsn list: [1,2,3,4]',
+    `sbt_token_id`              BIGINT       NOT NULL DEFAULT 0 COMMENT 'sbt nft token id',
     `task_status`               VARCHAR(300) NOT NULL COMMENT '任务状态, 一个长度300的字符串，0表示没有参与，1表示参与了。例如：00011111',
     `update_at`                 DATETIME ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
     `create_at`                 DATETIME              DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',

@@ -105,6 +105,7 @@ func (h *UserGetUserProfileService) Run(req *user.GetUserProfileRequest) (resp *
 		Badges:        userBadges,
 		Contributions: contributions,
 		PointsLogs:    userPointsLogs,
+		SbtTokenId:    userInfo.SbtTokenID,
 	}
 	return
 }

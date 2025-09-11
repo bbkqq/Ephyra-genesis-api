@@ -29,7 +29,7 @@ func _usergetuserprofileMw() []app.HandlerFunc {
 
 func _usergetuserrankingMw() []app.HandlerFunc {
 	// your code...
-	return []app.HandlerFunc{jwt.JwtMiddleware.MiddlewareFunc()}
+	return []app.HandlerFunc{jwt.JwtMiddleware.MiddlewareFuncWithWhiteList()}
 }
 
 func _usersetuserprofileMw() []app.HandlerFunc {

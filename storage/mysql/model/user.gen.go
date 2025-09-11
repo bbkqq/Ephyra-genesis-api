@@ -18,6 +18,7 @@ type User struct {
 	AvatarURL  string    `gorm:"column:avatar_url;not null;comment:头像链接" json:"avatar_url"`                                           // 头像链接
 	Points     int64     `gorm:"column:points;not null;comment:积分" json:"points"`                                                     // 积分
 	Badges     string    `gorm:"column:badges;not null;default:[];comment:用户徽章, jsn list: [1,2,3,4]" json:"badges"`                   // 用户徽章, jsn list: [1,2,3,4]
+	SbtTokenID int64     `gorm:"column:sbt_token_id;not null;comment:sbt nft token id" json:"sbt_token_id"`                           // sbt nft token id
 	TaskStatus string    `gorm:"column:task_status;not null;comment:任务状态, 一个长度300的字符串，0表示没有参与，1表示参与了。例如：00011111" json:"task_status"` // 任务状态, 一个长度300的字符串，0表示没有参与，1表示参与了。例如：00011111
 	UpdateAt   time.Time `gorm:"column:update_at;comment:更新时间" json:"update_at"`                                                      // 更新时间
 	CreateAt   time.Time `gorm:"column:create_at;default:CURRENT_TIMESTAMP;comment:创建时间" json:"create_at"`                            // 创建时间

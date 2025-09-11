@@ -11,17 +11,28 @@ import (
 )
 
 type ContextParams struct {
-	UserID  int64
-	Address string
-	Chain   string
+	UserID     int64
+	Address    string
+	Chain      string
+	JWTSkipped bool
 }
 
 func GetContextParams(ctx context.Context, appCtx *app.RequestContext) (*ContextParams, error) {
 	ctp := &ContextParams{
-		UserID:  0,
-		Address: "",
-		Chain:   "",
+		UserID:     0,
+		Address:    "",
+		Chain:      "",
+		JWTSkipped: false,
 	}
+
+	if v, ok := appCtx.Get("jwt_skipped"); ok {
+		r := cast.ToBool(v)
+		if r {
+			ctp.JWTSkipped = true
+			return ctp, nil
+		}
+	}
+
 	v, ok := appCtx.Get("user_id")
 	if !ok {
 		hlog.CtxErrorf(ctx, "user_id not found in context")

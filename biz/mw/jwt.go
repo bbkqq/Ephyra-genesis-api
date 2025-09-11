@@ -67,6 +67,16 @@ func (mw *jWTMiddleware) MiddlewareFunc() app.HandlerFunc {
 	}
 }
 
+// 接口jwt校验白名单，可以有jwt token ，也可以没有jwt token
+func (mw *jWTMiddleware) MiddlewareFuncWithWhiteList() app.HandlerFunc {
+	return func(ctx context.Context, c *app.RequestContext) {
+		err := mw.JwtVerify(ctx, c)
+		if err != nil {
+			c.Set("jwt_skipped", true)
+		}
+		c.Next(ctx)
+	}
+}
 func (mw *jWTMiddleware) JwtVerify(ctx context.Context, c *app.RequestContext) error {
 	authToken, err := mw.getKeyFromHeader(ctx, c, authHeaderKey)
 	// 先从header中获取

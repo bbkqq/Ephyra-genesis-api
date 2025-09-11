@@ -94,6 +94,7 @@ func CreateNewUser(ctx context.Context, address string) (*model.User, error) {
 		AvatarURL:  "",
 		Points:     0,
 		Badges:     "[]",
+		SbtTokenID: 0,
 		TaskStatus: defaultTaskStatus,
 		UpdateAt:   time.Now(),
 		CreateAt:   time.Now(),
@@ -647,6 +648,39 @@ func ProcessAnswerOnChainEvent(ctx context.Context, userAddress, answer string, 
 	}
 
 	hlog.CtxInfof(ctx, "[ProcessAnswerOnChainEvent] Successfully processed answer event for user %s, day %d", userAddress, day)
+	return nil
+}
+
+func ProcessAnswerOnChainSBTMintedEvent(ctx context.Context, userAddress string, tokenID int64, txHash string) error {
+
+	if tokenID <= 0 {
+		return nil
+	}
+
+	// 1. 根据地址获取或创建用户
+	userModel, err := GetUserByAddress(ctx, userAddress)
+	if err != nil {
+		return err
+	}
+
+	// 如果用户不存在，创建新用户
+	if userModel == nil {
+		userModel, err = CreateNewUser(ctx, userAddress)
+		if err != nil {
+			return err
+		}
+	}
+
+	// 更新用户SBT tokenID
+	err = mysql.DB.Model(&model.User{}).Where("id = ?", userModel.ID).Updates(map[string]interface{}{
+		"sbt_token_id": tokenID,
+	}).Error
+	if err != nil {
+		hlog.CtxErrorf(ctx, "[ProcessAnswerOnChainSBTMintedEvent] Update user sbt_token_id error: %v", err)
+		return bizerror.DBError
+	}
+
+	hlog.CtxInfof(ctx, "[ProcessAnswerOnChainSBTMintedEvent] Successfully processed answer event for user: %s, tokenID: %d", userAddress, tokenID)
 	return nil
 }
 

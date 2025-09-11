@@ -38,6 +38,7 @@ message GetUserProfileResponse{
   repeated Badge badges = 6;             // 用户获取的徽章
   UserContributions contributions = 7;   // 用户参与活动的贡献
   repeated UserPointsLogs points_logs = 8; // 用户最近5次的积分历史
+  int64 sbt_token_id = 9;                // 用户的SBT NFT tokenID
 }
 
 message SetUserProfileRequest{

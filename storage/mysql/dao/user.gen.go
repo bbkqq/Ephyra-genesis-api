@@ -33,6 +33,7 @@ func newUser(db *gorm.DB, opts ...gen.DOOption) user {
 	_user.AvatarURL = field.NewString(tableName, "avatar_url")
 	_user.Points = field.NewInt64(tableName, "points")
 	_user.Badges = field.NewString(tableName, "badges")
+	_user.SbtTokenID = field.NewInt64(tableName, "sbt_token_id")
 	_user.TaskStatus = field.NewString(tableName, "task_status")
 	_user.UpdateAt = field.NewTime(tableName, "update_at")
 	_user.CreateAt = field.NewTime(tableName, "create_at")
@@ -52,6 +53,7 @@ type user struct {
 	AvatarURL  field.String // 头像链接
 	Points     field.Int64  // 积分
 	Badges     field.String // 用户徽章, jsn list: [1,2,3,4]
+	SbtTokenID field.Int64  // sbt nft token id
 	TaskStatus field.String // 任务状态, 一个长度300的字符串，0表示没有参与，1表示参与了。例如：00011111
 	UpdateAt   field.Time   // 更新时间
 	CreateAt   field.Time   // 创建时间
@@ -77,6 +79,7 @@ func (u *user) updateTableName(table string) *user {
 	u.AvatarURL = field.NewString(table, "avatar_url")
 	u.Points = field.NewInt64(table, "points")
 	u.Badges = field.NewString(table, "badges")
+	u.SbtTokenID = field.NewInt64(table, "sbt_token_id")
 	u.TaskStatus = field.NewString(table, "task_status")
 	u.UpdateAt = field.NewTime(table, "update_at")
 	u.CreateAt = field.NewTime(table, "create_at")
@@ -104,13 +107,14 @@ func (u *user) GetFieldByName(fieldName string) (field.OrderExpr, bool) {
 }
 
 func (u *user) fillFieldMap() {
-	u.fieldMap = make(map[string]field.Expr, 9)
+	u.fieldMap = make(map[string]field.Expr, 10)
 	u.fieldMap["id"] = u.ID
 	u.fieldMap["address"] = u.Address
 	u.fieldMap["user_name"] = u.UserName
 	u.fieldMap["avatar_url"] = u.AvatarURL
 	u.fieldMap["points"] = u.Points
 	u.fieldMap["badges"] = u.Badges
+	u.fieldMap["sbt_token_id"] = u.SbtTokenID
 	u.fieldMap["task_status"] = u.TaskStatus
 	u.fieldMap["update_at"] = u.UpdateAt
 	u.fieldMap["create_at"] = u.CreateAt

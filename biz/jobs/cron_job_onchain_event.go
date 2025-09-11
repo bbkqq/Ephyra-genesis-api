@@ -136,9 +136,25 @@ func (c *AnswerEventListenerJob) Do(ctx context.Context) {
 }
 
 func (c *AnswerEventListenerJob) processEvent(ctx context.Context, opts *bind.FilterOpts) error {
+	err := c.processAnswerEvent(ctx, opts)
+	if err != nil {
+		hlog.CtxErrorf(ctx, "[AnswerEventListenerJob] processAnswerEvent error: %v", err)
+		return err
+	}
+
+	err = c.processNFTMintEvent(ctx, opts)
+	if err != nil {
+		hlog.CtxErrorf(ctx, "[AnswerEventListenerJob] processNFTMintEvent error: %v", err)
+		return err
+	}
+
+	return nil
+}
+
+func (c *AnswerEventListenerJob) processAnswerEvent(ctx context.Context, opts *bind.FilterOpts) error {
 	eventIterator, err := c.answerContract.FilterAnswerSubmitted(opts, nil)
 	if err != nil {
-		hlog.CtxErrorf(ctx, "[AnswerEventListenerJob] address: %v, FilterUserClaimEvent error: %v", c.answerContractAddress, err)
+		hlog.CtxErrorf(ctx, "[AnswerEventListenerJob] address: %v, FilterAnswerSubmitted error: %v", c.answerContractAddress, err)
 		return err
 	}
 
@@ -164,6 +180,43 @@ func (c *AnswerEventListenerJob) processEvent(ctx context.Context, opts *bind.Fi
 			event_.QuestionId.Int64(),
 			event_.Timestamp.Int64(),
 			event_.Day.Int64(),
+			event_.Raw.TxHash.Hex())
+
+		if err != nil {
+			hlog.CtxErrorf(ctx, "[AnswerEventListenerJob] ProcessAnswerOnChainEvent err: %v", err)
+			return err
+		}
+	}
+
+	return nil
+}
+
+func (c *AnswerEventListenerJob) processNFTMintEvent(ctx context.Context, opts *bind.FilterOpts) error {
+	eventIterator, err := c.answerContract.FilterSBTMinted(opts, nil)
+	if err != nil {
+		hlog.CtxErrorf(ctx, "[AnswerEventListenerJob] address: %v, FilterSBTMinted error: %v", c.answerContractAddress, err)
+		return err
+	}
+
+	for {
+		ret := eventIterator.Next()
+		if !ret {
+			break
+		}
+
+		event_ := eventIterator.Event
+		if event_.Raw.BlockNumber > c.startBlock {
+			c.startBlock = event_.Raw.BlockNumber
+		}
+
+		// 处理链上答案提交事件
+		hlog.CtxInfof(ctx, "[AnswerEventListenerJob] Processing SBTMint event: user=%s, tokenID=%d, txHash=%s",
+			event_.To.Hex(), event_.TokenId.Int64(), event_.Raw.TxHash.Hex())
+
+		err = dal.ProcessAnswerOnChainSBTMintedEvent(
+			ctx,
+			event_.To.Hex(),
+			event_.TokenId.Int64(),
 			event_.Raw.TxHash.Hex())
 
 		if err != nil {

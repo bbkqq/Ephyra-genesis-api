@@ -21,5 +21,5 @@ redis:
 
 contract:
   - name: "Answer"
-    address: "0x68b63f6A274594Cf2138A04dc2c98F528bC1bd1F"
+    address: "0x96dD543F492203FA13f585B365126a6E7e254DDF"
     rpc_url: "https://rpc.ankr.com/bsc_testnet_chapel/e513b41b6053de458b631c1471d0ef8069be73d0ada4aa39ca41b7055865b61a"
